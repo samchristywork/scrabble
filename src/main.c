@@ -77,6 +77,27 @@ char *wordMultiplier[15] = {
   "3      3      3",
 };
 
+void displayBoard(Board *board) {
+  for (int i = 0; i < 15; i++) {
+    for (int j = 0; j < 15; j++) {
+      if (board->cells[i][j].letter) {
+        printf("%c", board->cells[i][j].letter);
+      } else if (letterMultiplier[i][j] == '2') {
+        printf("2");
+      } else if (letterMultiplier[i][j] == '3') {
+        printf("3");
+      } else if (wordMultiplier[i][j] == '2') {
+        printf("2");
+      } else if (wordMultiplier[i][j] == '3') {
+        printf("3");
+      } else {
+        printf(" ");
+      }
+    }
+    printf("\n");
+  }
+}
+
 int main() {
   char *wordListFile = "/usr/share/dict/words";
 }
