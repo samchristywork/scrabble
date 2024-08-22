@@ -1,5 +1,7 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct {
   char letter;
@@ -11,70 +13,39 @@ typedef struct {
   Cell cells[15][15];
 } Board;
 
+typedef enum { HORIZONTAL, VERTICAL } Orientation;
+
+typedef struct {
+  char *word;
+  int x;
+  int y;
+  Orientation orientation;
+} Move;
+
 int letterDistribution[27] = {
-    9,  // A
-    2,  // B
-    2,  // C
-    4,  // D
-    12, // E
-    2,  // F
-    3,  // G
-    2,  // H
-    9,  // I
-    1,  // J
-    1,  // K
-    4,  // L
-    2,  // M
-    6,  // N
-    8,  // O
-    2,  // P
-    1,  // Q
-    6,  // R
-    4,  // S
-    6,  // T
-    4,  // U
-    2,  // V
-    2,  // W
-    1,  // X
-    2,  // Y
-    1,  // Z
-    2   // Blank
+    9, 2, 2, 4, 12, 2, 3, 2, 9, 1, 1, 4, 2,
+    6, 8, 2, 1, 6,  4, 6, 4, 2, 2, 1, 2, 1,
+    2 // Blank
+};
+
+int pointValues[27] = {
+    1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3,
+    1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10,
+    0 // Blank
 };
 
 char *letterMultiplier[15] = {
-  "   2       2   ",
-  "     3   3     ",
-  "      2 2      ",
-  "2      2      2",
-  "               ",
-  " 3   3   3   3 ",
-  "  2   2 2   2  ",
-  "   2   .   2   ",
-  "  2   2 2   2  ",
-  " 3   3   3   3 ",
-  "               ",
-  "2      2      2",
-  "      2 2      ",
-  "     3   3     ",
-  "   2       2   ",
+    "   2       2   ", "     3   3     ", "      2 2      ", "2      2      2",
+    "               ", " 3   3   3   3 ", "  2   2 2   2  ", "   2   .   2   ",
+    "  2   2 2   2  ", " 3   3   3   3 ", "               ", "2      2      2",
+    "      2 2      ", "     3   3     ", "   2       2   ",
 };
 
 char *wordMultiplier[15] = {
-  "3      3      3",
-  " 2           2 ",
-  "  2         2  ",
-  "   2       2   ",
-  "    2     2    ",
-  "               ",
-  "               ",
-  "3      .      3",
-  "               ",
-  "               ",
-  "    2     2    ",
-  "   2       2   ",
-  "  2         2  ",
-  " 2           2 ",
-  "3      3      3",
+    "3      3      3", " 2           2 ", "  2         2  ", "   2       2   ",
+    "    2     2    ", "               ", "               ", "3      .      3",
+    "               ", "               ", "    2     2    ", "   2       2   ",
+    "  2         2  ", " 2           2 ", "3      3      3",
 };
 
 void displayBoard(Board *board) {
